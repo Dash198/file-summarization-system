@@ -8,8 +8,7 @@ from data_processing import *
 if 'model' not in st.session_state:
 # Load environment variable
     load_dotenv()
-    st.session_state.model = SentenceTransformer("all-MiniLM-L6-v2")
-    
+    st.session_state.model = SentenceTransformer("all-MiniLM-L6-v2")    
     st.session_state.client = genai.Client()
     st.session_state.doc_read = False
     st.session_state.uploaded_file = None
@@ -37,6 +36,7 @@ if st.session_state.uploaded_file is not None:
             st.session_state.chunk_embeddings = embed_chunks(
                 gen_chunks(st.session_state.file_text), st.session_state.model
             )
+            st.session_state.chunks = gen_chunks(st.session_state.file_text)
 
         st.success("File processed!")
 
@@ -51,12 +51,7 @@ if st.session_state.uploaded_file is not None:
     # Handle query
     if query:
         with st.spinner("Thinking..."):
-            answer = get_answer(query, st.session_state.chunk_embeddings, st.session_state.model, st.session_state.client)
-            # best_chunks = return_top_k_chunks(query,st.session_state.chunk_embeddings,st.session_state.model)
-            # answer = f'Query: {query}\n'
-            # for sim, chunk_info in best_chunks:
-            #     answer += f'Similarity: {sim}\nChunk: {chunk_info['chunk']}'
-            #     answer += '\n'
+            answer = get_answer(query, st.session_state.chunk_embeddings, st.session_state.chunks, st.session_state.model, st.session_state.client)
             st.markdown(f"**Answer:** {answer}")
 
         
