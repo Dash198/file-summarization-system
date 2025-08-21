@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from sentence_transformers import SentenceTransformer
-from file_processing import *
+from data_processing import *
 
 if 'model' not in st.session_state:
 # Load environment variable
@@ -40,13 +40,13 @@ if st.session_state.uploaded_file is not None:
 
         st.success("File processed!")
 
-        # with st.spinner("Summarizing..."):
-        #     summary = summarize_text(st.session_state.file_text, st.session_state.client)
-        #     st.session_state.summary = summary
+        with st.spinner("Summarizing..."):
+            summary = summarize_text(st.session_state.file_text, st.session_state.client)
+            st.session_state.summary = summary
         st.session_state.doc_read = True
-        # # Show summary
+        # Show summary
         
-        # st.markdown(f"**Summary:** {st.session_state.summary}")
+        st.markdown(f"**Summary:** {st.session_state.summary}")
 
     # Handle query
     if query:

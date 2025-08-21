@@ -51,12 +51,20 @@ def return_top_k_chunks(query,embeddings,model,k=3):
 
 def get_answer(query, embeddings, model, client):
     best_chunks = return_top_k_chunks(query, embeddings, model)
-    prompt = f"""{"\n".join(chunk['chunk'] for _, chunk in best_chunks)}
+    context = "\n".join(chunk['chunk'] for _, chunk in best_chunks)
+    prompt = f"""
+    You're an AI assistant helping users understand documents.
 
-    Based on the paragraphs above, answer the question below
+    Use the information below to answer the question clearly and conversationally.
 
-    {query}"""
+    Context:
+    {context}
 
+    Question:
+    {query}
+
+    Answer in simple, friendly language. Be concise and accurate. Only use information from the context. If the answer isn't in the context, say so politely.
+    """
     response = client.models.generate_content(
     model='gemini-2.5-flash', contents = prompt
     )
